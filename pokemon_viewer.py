@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import ttk
 import os
 import ctypes
+import image_lib
 
 # Get the path of the script and its parent directory
 script_path = os.path.abspath(__file__)
@@ -42,14 +43,20 @@ def handle_poke_sel(event):
 
     pokemon_name = cbox_pokemon_names.get()
     
+    global image_path
     image_path = poke_api.download_pokemon_artwork(pokemon_name, image_cache_dir)
 
     if image_path is not None:
         img_poke['file'] = image_path
+        btn_set_desktop.state(['!disabled'])
 
 cbox_pokemon_names.bind('<<ComboboxSelected>>', handle_poke_sel)
 
-btn_set_desktop = ttk.Button(frame, text='Set as Desktop Image')
+def btn_set_desktop_img():
+
+    image_lib.set_desktop_background_image(image_path)
+
+btn_set_desktop = ttk.Button(frame, text='Set as Desktop Image', command=btn_set_desktop_img, state=DISABLED)
 btn_set_desktop.grid(row=2, column=0, padx=10, pady=10)
 
 root.mainloop()
